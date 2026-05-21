@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     
     # pydantic v2 settings config
     model_config = SettingsConfigDict(
-        env_file = ".env",
+        env_file = "../.env",
         env_file_encoding = "utf-8",
         extra = "ignore" #ignore unexpected env vars like DEBUG/Whatever
     )
