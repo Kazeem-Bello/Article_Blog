@@ -31,7 +31,7 @@ def retrieve_users(db: Session = Depends(get_db)):
 
 @user_router.get("/{email}", status_code=status.HTTP_200_OK, response_model=UserPublic)
 def get_user_by_email(email: str, db: Session = Depends(get_db)):
-    user = UserRepository.get_user_by_email(email=email, db=db)
+    user = UserRepository.get_by_email(email=email, db=db)
     if not user:
         raise HTTPException(detail=f"user not found", status_code=status.HTTP_404_NOT_FOUND)
     return user

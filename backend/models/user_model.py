@@ -15,7 +15,7 @@ class User(Base):
     
     id: Mapped[int] = mapped_column(primary_key = True)
     email: Mapped[EmailStr] = mapped_column(String(100), unique = True, index = True)
-    password:Mapped[str] = mapped_column(nullable = False)
+    hashed_password:Mapped[str] = mapped_column(nullable = False)
     is_active: Mapped[bool] = mapped_column(default = True)
     
     # many-to-one relationship (blog - user)

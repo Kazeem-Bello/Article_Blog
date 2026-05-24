@@ -7,6 +7,11 @@ class Settings(BaseSettings):
     POSTGRES_URL: str
     ENVIRONMENT: str
     
+    #Auth
+    SECRETE_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    
     
     # pydantic v2 settings config
     model_config = SettingsConfigDict(
