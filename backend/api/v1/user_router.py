@@ -33,7 +33,7 @@ def retrieve_users(db: Session = Depends(get_db)):
 def get_user_by_email(email: str, db: Session = Depends(get_db)):
     user = UserRepository.get_by_email(email=email, db=db)
     if not user:
-        raise HTTPException(detail=f"user not found", status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail="user not found", status_code=status.HTTP_404_NOT_FOUND)
     return user
 
 
@@ -41,7 +41,8 @@ def get_user_by_email(email: str, db: Session = Depends(get_db)):
 def update_user(id: int, user_in: UserUpdate, db: Session = Depends(get_db)):
     user = UserRepository.update_user(id=id, user_in=user_in, db=db)
     if not user:
-        raise HTTPException(detail=f"user not found", status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail="user not found", status_code=status.HTTP_404_NOT_FOUND)
+    db.commit()
     return user
 
 

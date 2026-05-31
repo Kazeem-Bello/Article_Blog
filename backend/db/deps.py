@@ -23,14 +23,14 @@ async def async_get_db():
         yield db
         
         
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/vi/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
 
 
-def get_current_user(token: str, db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credential_exec = HTTPException(
         detail="Could not validate credentials", 
         status_code=status.HTTP_401_UNAUTHORIZED,
-        headers={"WWW-Authorized": "Bearer"})
+        headers={"WWW-Authenticate": "Bearer"})
     try:
         payload = decode_token(token)
         email = payload.get("sub")  

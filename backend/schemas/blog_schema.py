@@ -20,7 +20,7 @@ class Blog(BlogBase):
     created_at: datetime
     author_id: int
     
-class BlogCreate(BlogBase):
+class BlogCreate(BlogBase): 
     pass
 
 

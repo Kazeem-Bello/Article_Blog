@@ -7,9 +7,10 @@ from fastapi import HTTPException, status
 
 
 class BlogRepository:
+    """All database blog operations"""
     
     @staticmethod
-    def create_blog(blog_in: BlogCreate, db: Session, author_id: int = 1) -> Blog:
+    def create_blog(blog_in: BlogCreate, db: Session, author_id: int) -> Blog:
         blog = Blog(
             title = blog_in.title,
             slug = blog_in.slug,
@@ -17,7 +18,7 @@ class BlogRepository:
             author_id=author_id
         )
         db.add(blog)
-        db.commit()
+        db.flush()
         db.refresh(blog)
         return blog 
     
@@ -29,7 +30,7 @@ class BlogRepository:
     
     
     @staticmethod
-    def get_blog_by_id(id: int, db: Session):
+    def get_by_id(id: int, db: Session):
         blog = db.scalars(select(Blog).where(Blog.id == id)).first()
         return blog
     
@@ -43,15 +44,16 @@ class BlogRepository:
         for key, value in blog_data.items():
             setattr(blog, key, value)
         db.add(blog)
-        db.commit()
+        db.flush()
         db.refresh(blog)
         return blog
+    
     
     @staticmethod
     def delete_blog(id: int, db: Session):
         blog = db.get(Blog, id)
         if not blog:
-            raise HTTPException(detail=f"Blog not found", status_code=status.HTTP_404_NOT_FOUND)
+            raise HTTPException(detail="Blog not found", status_code=status.HTTP_404_NOT_FOUND)
         db.delete(blog)
         db.commit()
         return {"message": "Blog Deleted"}
