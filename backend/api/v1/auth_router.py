@@ -16,14 +16,14 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
     return AuthServices.register(user_in=user_in, db=db)
 
 
-@auth_router.post("/token", response_model=Token)
-def login(form_data: UserLogin, db: Session = Depends(get_db)):
-    return AuthServices.login(username_or_email=form_data.email, password=form_data.password, db=db)
-
-
 # @auth_router.post("/token", response_model=Token)
-# def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-#     return AuthServices.login(username_or_email=form_data.username, password=form_data.password, db=db)
+# def login(form_data: UserLogin, db: Session = Depends(get_db)):
+#     return AuthServices.login(username_or_email=form_data.email, password=form_data.password, db=db)
+
+
+@auth_router.post("/token", response_model=Token)
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    return AuthServices.login(username_or_email=form_data.username, password=form_data.password, db=db)
 
 
 @auth_router.post("/me", response_model=UserPublic)

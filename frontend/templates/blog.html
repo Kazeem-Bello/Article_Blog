@@ -11,14 +11,13 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-    <link href="/static/css/style.css" rel="stylesheet"/>
+    <link href="/static/css/style.css" rel="stylesheet" />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid position-relative">
-
-    <!-- Left logo -->
-    <a class="navbar-brand ms-3" href="/">
+      <div class="container-fluid position-relative">
+        <!-- Left logo -->
+        <!--   <a class="navbar-brand ms-3" href="/">
       <img
         src="/static/images/blog.svg"
         alt="Blog Logo"
@@ -26,57 +25,61 @@
         height="40"
         class="d-inline-block align-text-top"
       />Blog
-    </a>
+    </a> -->
 
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-
-      <!-- Centre section -->
-      <div class="navbar-center">
-        <div class="navbar-nav gap-lg-5">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
-          <a class="nav-link" href="#">Features</a>
-          <a class="nav-link" href="#">Pricing</a>
-        </div>
-
-        <form class="d-flex ms-lg-5 mt-3 mt-lg-0" role="search">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
+        <a class="navbar-brand p-0 m-0" href="/">
+          <img
+            src="/static/images/b-logo.png"
+            alt="Blog Logo"
+            class="navbar-logo"
           />
-          <button class="btn btn-outline-success" type="submit">
-            Search
-          </button>
-        </form>
-      </div>
-
-      <!-- Right buttons -->
-      <div class="navbar-auth ms-lg-auto me-lg-4 mt-3 mt-lg-0">
-        <a class="btn btn-outline-success me-2" href="/login.html">
-          Login
         </a>
 
-        <a class="btn btn-success" href="/register.html">
-          Sign-up
-        </a>
-      </div>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-    </div>
-  </div>
-</nav>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <!-- Centre section -->
+          <div class="navbar-center">
+            <div class="navbar-nav gap-lg-5">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+              <a class="nav-link" href="#">Features</a>
+              <a class="nav-link" href="#">Pricing</a>
+            </div>
+
+            <form class="d-flex ms-lg-5 mt-3 mt-lg-0" role="search">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button class="btn btn-outline-success" type="submit">
+                Search
+              </button>
+            </form>
+          </div>
+
+          <!-- Right buttons -->
+          <div class="navbar-auth ms-lg-auto me-lg-4 mt-3 mt-lg-0">
+            <a class="btn btn-outline-success me-2" href="/login.html">
+              Login
+            </a>
+
+            <a class="btn btn-success" href="/register.html"> Sign-up </a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <main class="container mt-4">
       <div id="blog-detail">
@@ -88,7 +91,6 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <script src="/static/js/blog.js">
-    </script>
+    <script src="/static/js/blog.js"></script>
   </body>
 </html>

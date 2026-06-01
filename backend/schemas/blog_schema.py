@@ -27,6 +27,7 @@ class BlogCreate(BlogBase):
 class BlogPublic(BaseModel):
     id: int
     title: str
+    slug: str
     content: str
     created_at: datetime
     

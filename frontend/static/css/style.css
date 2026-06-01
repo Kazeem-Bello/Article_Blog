@@ -1,3 +1,25 @@
+.navbar {
+  min-height: 70px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.navbar-brand {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-right: 0;
+}
+
+.navbar-logo {
+  width: 300px;
+  height: auto;
+  max-height: 60px;
+  object-fit: contain;
+  display: block;
+}
+
+
+
 @media (min-width: 992px) {
   .navbar-center {
     position: absolute;
@@ -31,4 +53,6 @@
     display: flex;
     gap: 0.5rem;
   }
+  
 }
+

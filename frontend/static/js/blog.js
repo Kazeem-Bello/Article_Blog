@@ -24,7 +24,7 @@ async function loadBlogDetail() {
       ? new Date(blog.created_at).toLocaleDateString()
       : "No date";
 
-    title.innerHTML = `${blog.title}`;
+    title.innerHTML = `${blog.slug}`;
 
     container.innerHTML = `
           <div class="card">
