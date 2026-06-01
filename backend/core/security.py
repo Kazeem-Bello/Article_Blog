@@ -2,6 +2,7 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from core.config import settings
+import re
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -26,3 +27,13 @@ def decode_token(token: str) -> dict:
     return jwt.decode(token, settings.SECRETE_KEY, algorithms=[settings.ALGORITHM])
 
 
+def validate_password(password: str):
+    pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$"
+    
+    if not re.match(pattern, password):
+        return False
+    return password
+
+
+
+# print(hash_password(""))

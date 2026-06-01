@@ -21,13 +21,13 @@ app.mount(
     name="frontend"
 )
 
-templates = Jinja2Templates(directory="../frontend/templates")
+# templates = Jinja2Templates(directory="../frontend/templates")
 
 
-@app.get("/")
-def home(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", 
-                                      context={"request": request})
+# @app.get("/")
+# def home(request: Request):
+#     return templates.TemplateResponse(request=request, name="index.html", 
+#                                       context={"request": request})
 
 
 

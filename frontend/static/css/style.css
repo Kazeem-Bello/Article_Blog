@@ -1,0 +1,34 @@
+@media (min-width: 992px) {
+  .navbar-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-auth {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .navbar-center {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  .navbar-center form {
+    width: 100%;
+  }
+
+  .navbar-auth {
+    display: flex;
+    gap: 0.5rem;
+  }
+}

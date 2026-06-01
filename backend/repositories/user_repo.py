@@ -8,7 +8,6 @@ from fastapi import HTTPException, status
 from core.security import hash_password
 
 
-
 class UserRepository:
     """all user database operations"""
     

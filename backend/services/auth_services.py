@@ -9,6 +9,7 @@ from pydantic import EmailStr
 from core.config import settings
 from datetime import timedelta
 from schemas.auth import Token
+from core.security import validate_password
 
 
 
@@ -26,6 +27,13 @@ class AuthServices:
                 detail="Username not available",
                 status_code=status.HTTP_400_BAD_REQUEST,
             )  
+        if not validate_password(user_in.password):
+            raise HTTPException(
+                detail="Password must be at least 8 characters long and contain one uppercase letter, "
+            "one lowercase letter, one number, and one special character",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )  
+        
         user = UserRepository.create_user(user_in=user_in, db=db)
         db.commit()     
         return user
