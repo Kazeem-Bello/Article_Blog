@@ -8,6 +8,8 @@ from core.config import settings
 from db.session import Base
 from models.user_model import User
 from models.blog_model import Blog
+from models.refresh_token_model import RefreshToken
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

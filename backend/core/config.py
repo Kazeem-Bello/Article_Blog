@@ -8,9 +8,12 @@ class Settings(BaseSettings):
     ENVIRONMENT: str
     
     #Auth
-    SECRETE_KEY: str
+    SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_TOKEN_EXPIRE_DAYS: int
+    EMAIL_VERIFICATION_TOKEN_EXPIRE_HOUR: int
+    
     
     
     # pydantic v2 settings config

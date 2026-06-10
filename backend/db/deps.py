@@ -1,8 +1,7 @@
 from db.session import SessionLocal, AsyncSessionLocal
-from fastapi import HTTPException, status, Depends
+from fastapi import HTTPException, status, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from jose import JWTError
 from core.security import decode_token
 from pydantic import EmailStr
 from repositories.user_repo import UserRepository
@@ -23,25 +22,23 @@ async def async_get_db():
         yield db
         
         
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credential_exec = HTTPException(
-        detail="Could not validate credentials", 
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        headers={"WWW-Authenticate": "Bearer"})
-    try:
-        payload = decode_token(token)
-        email = payload.get("sub")  
-        if not email:
-            raise credential_exec
-    except JWTError:
-        raise credential_exec
-    user = UserRepository.get_by_email(email=email, db=db)
+def get_current_user(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token") 
+    if not token:
+        raise HTTPException(detail="Missing access token", status_code=status.HTTP_401_UNAUTHORIZED, headers={"WWW-Authenticate": "Bearer"})
+    payload = decode_token(token)
+    user_id = int(payload.get("sub"))
+    if not user_id: 
+        raise HTTPException(detail="Invalid token", status_code=status.HTTP_401_UNAUTHORIZED, headers={"WWW-Authenticate": "Bearer"})
+    user = UserRepository.get_by_id(id=user_id, db=db)
     if not user:
-        raise credential_exec
+        raise HTTPException(detail="User not found", status_code=status.HTTP_401_UNAUTHORIZED, headers={"WWW-Authenticate": "Bearer"})
     return user
+        
+    
         
         
 def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
@@ -60,3 +57,4 @@ def required_role(*role: str):
 
 require_admin = required_role("admin")
 require_staff = required_role("admin", "moderator")
+
