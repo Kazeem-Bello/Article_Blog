@@ -1,4 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict,field_validator
+from typing import List
+from datetime import datetime
+
 import re
 
 class UserBase(BaseModel):
@@ -34,8 +37,28 @@ class UserPublic(BaseModel):
     id: int
     email: EmailStr
     username: str
+    # refresh_tokens: List[RefreshToken]
+    
+# class RefreshToken(BaseModel):
+#     id: int
+#     user_id: int
+#     expires_at: datetime
+#     created_at: datetime
+#     revoked: bool
+#     token: str
+    
+    
 
     
 class UserUpdate(BaseModel):
     email: EmailStr | None = None
     password: str | None = None
+    
+
+class PasswordChange(BaseModel):
+    old_password: str 
+    new_password: str 
+    
+class PasswordReset(BaseModel):
+    token: str
+    new_password: str

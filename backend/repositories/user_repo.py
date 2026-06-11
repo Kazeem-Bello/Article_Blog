@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from schemas.user_schema import UserCreate, UserPublic, UserUpdate
+from schemas.user_schema import UserCreate, UserPublic, UserUpdate, PasswordChange
 from models.user_model import User
 from models.blog_model import Blog
 from typing import List
 from fastapi import HTTPException, status
-from core.security import hash_password
+from core.security import hash_password, verify_password, validate_password
 
 
 class UserRepository:
@@ -70,4 +70,14 @@ class UserRepository:
         db.delete(user)
         db.commit()
         return {"Message": "User Deleted"}
+    
+    
+    @staticmethod
+    def change_password(password: PasswordChange, user: User, db: Session):
+        user.hashed_password = hash_password(password.new_password)
+        db.add(user)
+        db.commit()
+        return user
+            
+            
         

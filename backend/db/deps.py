@@ -47,6 +47,12 @@ def get_current_active_user(current_user: User = Depends(get_current_user)) -> U
     return current_user
 
 
+def require_admin(user: User = Depends(get_current_active_user)):
+    if not user.is_admin:
+        raise HTTPException(detail=f"Administrative access required", status_code=status.HTTP_403_FORBIDDEN)
+    return user
+        
+        
 def required_role(*role: str):
     def role_checker(current_user: User = Depends(get_current_active_user)):
         if current_user.role not in role:
@@ -55,6 +61,6 @@ def required_role(*role: str):
     return role_checker
 
 
-require_admin = required_role("admin")
-require_staff = required_role("admin", "moderator")
+# require_admin = required_role("admin")
+# require_staff = required_role("admin", "moderator")
 

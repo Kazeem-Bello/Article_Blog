@@ -47,6 +47,23 @@ class RefreshTokenRepository:
         to_encode = {"sub": str(user_id), "type": "verify_email"}
         email_token = create_access_token(data=to_encode, expire_delta=timedelta(hours=settings.EMAIL_VERIFICATION_TOKEN_EXPIRE_HOUR))
         return email_token
+    
+    
+    @staticmethod
+    def create_password_reset_token(user_id: int):
+        to_encode = {"sub": str(user_id), "type": "reset_password"}
+        password_token = create_access_token(data=to_encode, expire_delta=timedelta(minutes=settings.PASSWORD_RESET_TOKEN_EXPIRE_MINUTES))
+        return password_token
+    
+    
+    @staticmethod
+    def revoke_refresh_token(token: str, db: Session):
+        refresh_token = db.scalars(select(RefreshToken).where(RefreshToken.token == token)).first()
+        if refresh_token:
+            refresh_token.revoked = True
+            db.add(refresh_token)
+            db.commit()
+        return refresh_token
                 
         
         

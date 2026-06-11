@@ -1,17 +1,15 @@
-from core.security import verify_password
+from core.security import verify_password, validate_password, decode_token, hash_password
 from models.user_model import User
-from schemas.user_schema import UserCreate
+from schemas.user_schema import UserCreate, PasswordChange, PasswordReset
 from db.deps import get_db
 from sqlalchemy.orm import Session
 from repositories.user_repo import UserRepository
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from core.config import settings
 from datetime import timedelta
 from schemas.auth import Token
-from core.security import validate_password
 from repositories.refresh_token_repo import RefreshTokenRepository
-from core.security import decode_token
 
 
 
@@ -31,7 +29,7 @@ class AuthServices:
             )  
         if not validate_password(user_in.password):
             raise HTTPException(
-                detail="Password must be at least 8 characters long and contain one uppercase letter, "
+                detail="Password must be at least 8 characters long, contains one uppercase letter, "
             "one lowercase letter, one number, and one special character",
                 status_code=status.HTTP_400_BAD_REQUEST,
             )  
@@ -75,7 +73,8 @@ class AuthServices:
     
     
     @staticmethod
-    def refresh_token(token: str, db: Session):
+    def refresh_token(request: Request, db: Session):
+        token = request.cookies.get("refresh_token")
         user = RefreshTokenRepository.verify_refresh_token(token=token, db=db)
         if not user:
             raise HTTPException(
@@ -116,7 +115,7 @@ class AuthServices:
     @staticmethod
     def verify_email(db: Session, token: str):
         payload = decode_token(token)
-        if not payload and payload.get("type") != "verify_email":
+        if not payload  or payload.get("type") != "verify_email":
             raise HTTPException(
                 detail="Invalid or missing token",
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -125,7 +124,7 @@ class AuthServices:
         user = UserRepository.get_by_id(db=db, id=user_id)
         if not user: 
             raise HTTPException(
-                detail="User no found",
+                detail="User not found",
                 status_code=status.HTTP_404_NOT_FOUND,
             )
         user.is_verified = True
@@ -134,4 +133,70 @@ class AuthServices:
         return {"message": "Verification successful!!"}
         
         
-        
+    @staticmethod
+    def change_password(password: PasswordChange, user: User, db: Session):
+        if not verify_password(password.old_password, user.hashed_password):
+            raise HTTPException(detail="Old password is not correct", status_code=status.HTTP_401_UNAUTHORIZED)
+        if not validate_password(password.new_password):
+            raise HTTPException(
+                detail=" New password must be at least 8 characters long, contains one uppercase letter, "
+            "one lowercase letter, one number, and one special character",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            ) 
+        user = UserRepository.change_password(password=password, user=user, db=db)
+        return {"Message": "Password changed successfully"}
+    
+    
+    @staticmethod
+    def send_password_reset_token(email: str, db: Session):
+        user = UserRepository.get_by_email(email=email, db=db)
+        if not user:
+            raise HTTPException(
+                detail="User not found",
+                status_code=status.HTTP_404_NOT_FOUND,
+            )
+        password_token = RefreshTokenRepository.create_password_reset_token(user_id=user.id)
+        link = f"http://localhost:8000/reset?token={password_token}"
+        print(f"Reset your password: {link}")
+        return {"message": "Password Reset sent"}
+    
+    
+    @staticmethod
+    def reset_password(password: PasswordReset, db: Session):
+        payload = decode_token(password.token)
+        if not payload or payload.get("type") != "reset_password":
+            raise HTTPException(
+                detail="Invalid or missing token",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
+        user_id = int(payload.get("sub"))
+        user = UserRepository.get_by_id(db=db, id=user_id)
+        if not user: 
+            raise HTTPException(
+                detail="User not found",
+                status_code=status.HTTP_404_NOT_FOUND,
+            )
+        if not validate_password(password.new_password):
+            raise HTTPException(
+                detail=" New password must be at least 8 characters long, contains one uppercase letter, "
+            "one lowercase letter, one number, and one special character",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            ) 
+        user.hashed_password = hash_password(password.new_password)
+        db.add(user)
+        db.commit()
+        return {"message": "Password reset successfully!!"}
+    
+    @staticmethod
+    def revoke_refresh_token(request: Request, db: Session):
+        token = request.cookies.get("refresh_token")
+        if not token:
+            raise HTTPException(
+                detail="Invalid or missing token",
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
+        revoked_token = RefreshTokenRepository.revoke_refresh_token(token=token, db=db)
+        response = JSONResponse(content = {"message": "Logged out successfully"})
+        response.delete_cookie("refresh_token")
+        response.delete_cookie("access_token")
+        return response
